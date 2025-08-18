@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles.css">
+
+    <title>Guitar Trainer</title>
+</head>
+<body>
+    <div class="settings">
+        <label for="instrument-selector">Selected instrument:</label>
+        <select name="instrument-selector" id="instrument-selector"></select>
+
+        <div class="accidental-selector">
+            <input type="radio" class="acc-select" id="sharps" name="accidentals" value="sharps" checked>
+            <label for="sharps">♯</label>
+            <input type="radio" class="acc-select" id="flats" name="accidentals" value="flats">
+            <label for="flats">♭</label>
+        </div>
+
+        <label for="number-of-frets">Number of frets:</label>
+        <input type="number" id="number-of-frets" value="21" min="5" max="30">
+
+        <label for="show-all-notes">Show all notes:</label>
+        <input type="checkbox" id="show-all-notes" unchecked>
+
+    </div>
+    <div class="fretboard">
+        <script src="./app.js"></script>
+    </div>
+</body>
+</html>
