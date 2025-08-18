@@ -43,10 +43,12 @@ label {
     margin: 0 10px;
 }
 
+
+
 .fretboard {
     display: flex;
     flex-direction: column;
-    background: #be975b;
+    background: #be975b url("./images/wood-pattern.png");
     width: 100%;
     min-width:1200px;
     height: calc(var(--fretboard-height) * 1px);
@@ -126,4 +128,23 @@ label {
 .double-fretmark:after {;
     top: calc(var(--double-fretmark-position-2) * 1px);
     transform: translate(-140%, -50%);
+}
+
+.note-name-section {
+    width: 100%;
+    color: #fff;
+    display: flex;
+    font-weight: 200;
+    font-size: 2.5em;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.note-name-section span {
+    padding: 20px;
+    cursor: pointer;
+}
+
+.note-name-section span:hover {
+    color: hotpink;
 }
