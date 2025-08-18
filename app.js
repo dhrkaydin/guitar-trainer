@@ -128,7 +128,7 @@ const app = {
     showNodeDot(event) {
         if (event.target.classList.contains('note-fret')) {
             if (showMultipleNotes) {
-                this.toggleMultipleNotes(event.target.dataset.note, 1);
+                app.toggleMultipleNotes(event.target.dataset.note, 1);
             } else {
                 event.target.style.setProperty('--note-dot-opacity', 1);
             }
@@ -137,7 +137,7 @@ const app = {
     hideNodeDot(event) {
         if (event.target.classList.contains('note-fret')) {
             if (showMultipleNotes) {
-                this.toggleMultipleNotes(event.target.dataset.note, 0);
+                app.toggleMultipleNotes(event.target.dataset.note, 0);
             } else {
                 event.target.style.setProperty('--note-dot-opacity', 0);
             }
@@ -145,8 +145,8 @@ const app = {
     },
 
     setupEventListeners() {
-        fretboard.addEventListener('mouseover', (e) => this.showNodeDot(e));
-        fretboard.addEventListener('mouseout', (e) => this.hideNodeDot(e));
+        fretboard.addEventListener('mouseover', this.showNodeDot);
+        fretboard.addEventListener('mouseout', this.hideNodeDot);
 
         selectedInstrumentSelector.addEventListener('change', (event) => {
             selectedInstrument = event.target.value;
@@ -181,12 +181,12 @@ const app = {
         });
         noteNameSection.addEventListener('mouseover', (event) => {
             let note = event.target.innerText;
-            this.toggleMultipleNotes(note, 1);
+            app.toggleMultipleNotes(note, 1);
         });
         noteNameSection.addEventListener('mouseout', (event) => {
             if (!showAllNotesSelector.checked) {
                 let note = event.target.innerText;
-                this.toggleMultipleNotes(note, 0);
+                app.toggleMultipleNotes(note, 0);
             }
         });
     },
