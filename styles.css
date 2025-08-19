@@ -94,10 +94,10 @@ label {
 
 .note-fret:before {
     content: attr(data-note);
-    width: 33px;
-    height: 33px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
-    line-height: 33px;
+    line-height: 44px;
     text-align: center;
     background: var(--note-dot-color);
     z-index: 2;
