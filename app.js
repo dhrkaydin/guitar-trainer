@@ -232,6 +232,47 @@
             })
         },
 
+        updateKeyDropdowns() {
+            this.updateScaleKeyDropdown();
+            this.updateTriadKeyDropdown();
+        },
+
+        updateScaleKeyDropdown() {
+            const currentValue = scaleKeySelector.value;
+            scaleKeySelector.innerHTML = '';
+
+            let defaultKeyOption = tools.createElement('option', 'Select key');
+            defaultKeyOption.value = '';
+            scaleKeySelector.appendChild(defaultKeyOption);
+
+            let noteNames = state.accidentals === 'sharps' ? notesSharp : notesFlat;
+            noteNames.forEach((noteName, index) => {
+                let keyOption = tools.createElement('option', noteName);
+                keyOption.value = index;
+                scaleKeySelector.appendChild(keyOption);
+            });
+
+            scaleKeySelector.value = currentValue;
+        },
+
+        updateTriadKeyDropdown() {
+            const currentValue = triadKeySelector.value;
+            triadKeySelector.innerHTML = '';
+
+            let defaultKeyOption = tools.createElement('option', 'Select key');
+            defaultKeyOption.value = '';
+            triadKeySelector.appendChild(defaultKeyOption);
+
+            let noteNames = state.accidentals === 'sharps' ? notesSharp : notesFlat;
+            noteNames.forEach((noteName, index) => {
+                let keyOption = tools.createElement('option', noteName);
+                keyOption.value = index;
+                triadKeySelector.appendChild(keyOption);
+            });
+
+            triadKeySelector.value = currentValue;
+        },
+
         // Logic
 
         toggleMultipleNotes(noteName, opacity) {
@@ -292,6 +333,7 @@
                 state.accidentals = event.target.value;
                 app.setupFretboard();
                 app.setupNoteNameSection();
+                app.updateKeyDropdowns();
             }
         },
 
