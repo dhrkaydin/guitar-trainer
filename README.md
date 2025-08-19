@@ -1,7 +1,7 @@
 ### Description
 
-An interactive fretboard made mostly using a tutorial from another github user "musicandcode".
-I further expanded on his concept, and refactored it to suit my style. 
+An interactive fretboard made mostly based on the version of another github user "musicandcode".
+I followed his wise teachings, expanded on his concept, and refactored it to suit my style. 
 
 I was looking for a tool like this, and I saw some paid versions, which I got annoyed by and thought "I'm pretty sure I can make this myself"
 So here it is. It's free baby.
