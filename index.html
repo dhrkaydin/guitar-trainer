@@ -9,6 +9,7 @@
 </head>
 <body>
     <div class="settings">
+        <!-- Settings contains all the selectors -->
         <label for="instrument-selector">Selected instrument:</label>
         <select name="instrument-selector" id="instrument-selector"></select>
 
@@ -22,11 +23,34 @@
         <label for="number-of-frets">Number of frets:</label>
         <input type="number" id="number-of-frets" value="21" min="5" max="30">
 
-        <label for="show-all-notes">Show all notes:</label>
-        <input type="checkbox" id="show-all-notes" unchecked>
+        <label for="note-display-mode">Note display:</label>
+        <select id="note-display-mode">
+            <option value="single">Single</option>
+            <option value="multiple">Multiple</option>
+            <option value="all">All</option>
+        </select>
 
-        <label for="show-multiple-notes">Show multiple notes:</label>
-        <input type="checkbox" id="show-multiple-notes" unchecked>
+        <div class="display-mode-selector">
+            <label>Display mode:</label>
+            <input type="radio" id="mode-free" name="display-mode" value="free" checked>
+            <label for="mode-free">Free</label>
+            <input type="radio" id="mode-scales" name="display-mode" value="scales">
+            <label for="mode-scales">Scales</label>
+            <input type="radio" id="mode-triads" name="display-mode" value="triads">
+            <label for="mode-triads">Triads</label>
+        </div>
+
+        <label for="scale-key">Key: </label>
+        <select name="scale-key" id="scale-key"></select>
+
+        <label for="scale-mode"> Mode: </label>
+        <select name="scale-mode" id="scale-mode"></select>
+
+        <label for="triad-key">Key: </label>
+        <select name="triad-key" id="triad-key"></select>
+
+        <label for="triad-type"> Type: </label>
+        <select name="triad-type" id="triad-type"></select>
     </div>
     <div class="fretboard">
     </div>
