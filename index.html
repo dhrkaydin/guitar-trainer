@@ -38,19 +38,27 @@
             <label for="mode-scales">Scales</label>
             <input type="radio" id="mode-triads" name="display-mode" value="triads">
             <label for="mode-triads">Triads</label>
+            <input type="radio" id="mode-intervals" name="display-mode" value="intervals">
+            <label for="mode-intervals">Intervals</label>
         </div>
 
-        <label for="scale-key">Key: </label>
+        <label for="scale-key">Root: </label>
         <select name="scale-key" id="scale-key"></select>
 
         <label for="scale-mode"> Mode: </label>
         <select name="scale-mode" id="scale-mode"></select>
 
-        <label for="triad-key">Key: </label>
+        <label for="triad-key">Root: </label>
         <select name="triad-key" id="triad-key"></select>
 
         <label for="triad-type"> Type: </label>
         <select name="triad-type" id="triad-type"></select>
+
+        <label for="interval-key">Root: </label>
+        <select name="interval-key" id="interval-key"></select>
+
+        <label for="interval-type"> Interval: </label>
+        <select name="interval-type" id="interval-type"></select>
     </div>
     <div class="fretboard">
     </div>
@@ -58,6 +66,6 @@
 
     </div>
 
-    <script src="./app.js"></script>
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>
