@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:100,300,400');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #353535;
+    font-family: Lato, sans-serif;
+}
+
+.settings {
+    display: flex;
+    color: #fff;
+    padding: 5px;
+    border-bottom: 1px solid #444;
+    background: #282828;
+    justify-content: space-between;
+    min-height: 80px;
+}
+
+.selector-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.selector-block select, input {
+    margin: 6px;
+}
+.selector-block div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.accidental-selector {
+    margin-left: 20px;
+}
+
+.accidental-selector div {
+    flex-direction: row;
+}
+
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+    opacity: 1;
+}
+label {
+    margin: 0 10px;
+}
+

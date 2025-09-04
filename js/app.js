@@ -7,7 +7,6 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
     const accidentalSelector = document.querySelector('.accidental-selector');
     const numberOfFretsSelector = document.querySelector('#number-of-frets');
     const noteDisplayModeSelector = document.querySelector('#note-display-mode');
-    const displayModeSelector = document.querySelector('.display-mode-selector');
     const scaleKeySelector = document.querySelector('#scale-key');
     const scaleModeSelector = document.querySelector('#scale-mode');
     const triadKeySelector = document.querySelector('#triad-key');
@@ -17,6 +16,7 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
 
     const fretboard = document.querySelector('.fretboard');
     const noteNameSection = document.querySelector('.note-name-section');
+    const displayModeRadios = document.querySelectorAll('input[name="display-mode"]');
 
     const state = {
         allNotes: null,
@@ -56,103 +56,49 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
             }
         },
 
-        setupScaleSelectors() {
-            // Populate scale key selector
-            let defaultKeyOption = tools.createElement('option', 'Select root');
+        setupModeSelectors(mode, keySelector, typeSelector, typeDefaultText, musicTheoryTypes) {
+            // Populate key selector
+            const defaultKeyOption = tools.createElement('option', 'Select root');
             defaultKeyOption.value = '';
-            scaleKeySelector.appendChild(defaultKeyOption);
+            keySelector.appendChild(defaultKeyOption);
 
-            let noteNames = state.accidentals === 'sharps' ? notesSharp : notesFlat;
+            const noteNames = state.accidentals === 'sharps' ? notesSharp : notesFlat;
             noteNames.forEach((noteName, index) => {
-                let keyOption = tools.createElement('option', noteName);
+                const keyOption = tools.createElement('option', noteName);
                 keyOption.value = index;
-                scaleKeySelector.appendChild(keyOption);
+                keySelector.appendChild(keyOption);
             });
 
-            // Populate scale mode selector
-            let defaultModeOption = tools.createElement('option', 'Select scale');
-            defaultModeOption.value = '';
-            scaleModeSelector.appendChild(defaultModeOption);
+            // Populate type selector
+            const defaultTypeOption = tools.createElement('option', typeDefaultText);
+            defaultTypeOption.value = '';
+            typeSelector.appendChild(defaultTypeOption);
 
-            musicTheory.scales.types.forEach((scaleType) => {
-                let modeOption = tools.createElement('option', scaleType.name);
-                modeOption.value = scaleType.value;
-                scaleModeSelector.appendChild(modeOption);
+            musicTheoryTypes.forEach((type) => {
+                const typeOption = tools.createElement('option', type.name);
+                typeOption.value = type.value;
+                typeSelector.appendChild(typeOption);
             });
 
             // Initially hide selectors and labels
-            scaleKeySelector.style.display = 'none';
-            scaleModeSelector.style.display = 'none';
-            const scaleKeyLabel = document.querySelector('label[for="scale-key"]');
-            const scaleModeLabel = document.querySelector('label[for="scale-mode"]');
-            scaleKeyLabel.style.display = 'none';
-            scaleModeLabel.style.display = 'none';
+            keySelector.style.display = 'none';
+            typeSelector.style.display = 'none';
+            const keyLabel = document.querySelector(`label[for="${keySelector.id}"]`);
+            const typeLabel = document.querySelector(`label[for="${typeSelector.id}"]`);
+            keyLabel.style.display = 'none';
+            typeLabel.style.display = 'none';
+        },
+
+        setupScaleSelectors() {
+            this.setupModeSelectors('scales', scaleKeySelector, scaleModeSelector, 'Select scale', musicTheory.scales.types);
         },
 
         setupTriadSelectors() {
-            // Populate triad key selector
-            let defaultKeyOption = tools.createElement('option', 'Select root');
-            defaultKeyOption.value = '';
-            triadKeySelector.appendChild(defaultKeyOption);
-
-            let noteNames = state.accidentals === 'sharps' ? notesSharp : notesFlat;
-            noteNames.forEach((noteName, index) => {
-                let keyOption = tools.createElement('option', noteName);
-                keyOption.value = index;
-                triadKeySelector.appendChild(keyOption);
-            });
-
-            // Populate triad type selector
-            let defaultTypeOption = tools.createElement('option', 'Select type');
-            defaultTypeOption.value = '';
-            triadTypeSelector.appendChild(defaultTypeOption);
-
-            musicTheory.triads.types.forEach((triadType) => {
-                let typeOption = tools.createElement('option', triadType.name);
-                typeOption.value = triadType.value;
-                triadTypeSelector.appendChild(typeOption);
-            });
-
-            // Initially hide selectors and labels
-            triadKeySelector.style.display = 'none';
-            triadTypeSelector.style.display = 'none';
-            const triadKeyLabel = document.querySelector('label[for="triad-key"]');
-            const triadTypeLabel = document.querySelector('label[for="triad-type"]');
-            triadKeyLabel.style.display = 'none';
-            triadTypeLabel.style.display = 'none';
+            this.setupModeSelectors('triads', triadKeySelector, triadTypeSelector, 'Select type', musicTheory.triads.types);
         },
 
         setupIntervalSelectors() {
-            // Populate interval key selector
-            let defaultKeyOption = tools.createElement('option', 'Select root');
-            defaultKeyOption.value = '';
-            intervalKeySelector.appendChild(defaultKeyOption);
-
-            let noteNames = state.accidentals === 'sharps' ? notesSharp : notesFlat;
-            noteNames.forEach((noteName, index) => {
-                let keyOption = tools.createElement('option', noteName);
-                keyOption.value = index;
-                intervalKeySelector.appendChild(keyOption);
-            });
-
-            // Populate interval type selector
-            let defaultTypeOption = tools.createElement('option', 'Select interval');
-            defaultTypeOption.value = '';
-            intervalTypeSelector.appendChild(defaultTypeOption);
-
-            musicTheory.intervals.types.forEach((intervalType) => {
-                let typeOption = tools.createElement('option', intervalType.name);
-                typeOption.value = intervalType.value;
-                intervalTypeSelector.appendChild(typeOption);
-            });
-
-            // Initially hide selectors and labels
-            intervalKeySelector.style.display = 'none';
-            intervalTypeSelector.style.display = 'none';
-            const intervalKeyLabel = document.querySelector('label[for="interval-key"]');
-            const intervalTypeLabel = document.querySelector('label[for="interval-type"]');
-            intervalKeyLabel.style.display = 'none';
-            intervalTypeLabel.style.display = 'none';
+            this.setupModeSelectors('intervals', intervalKeySelector, intervalTypeSelector, 'Select interval', musicTheory.intervals.types);
         },
 
         setupFretboard() {
@@ -195,34 +141,13 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
 
         generateNoteNames(noteIndex) {
             noteIndex = noteIndex % 12;
-            let noteName;
-            noteName = state.accidentals === 'flats' ? notesFlat[noteIndex] : notesSharp[noteIndex];
-
-            return noteName;
+            return state.accidentals === 'flats' ? notesFlat[noteIndex] : notesSharp[noteIndex];
         },
 
         setupNoteNameSection() {
             noteNameSection.innerHTML = '';
 
-            let noteNames;
-
-            // If scale mode is enabled and both key and type are selected, show scale notes
-            if (state.scaleEnabled && state.sharedRoot !== null && state.scale.type !== null) {
-                noteNames = tools.calculateNotes(state.sharedRoot, state.scale.type, musicTheory.scales.intervals);
-            }
-            // If triad mode is enabled and both key and type are selected, show triad notes
-            else if (state.triadEnabled && state.sharedRoot !== null && state.triad.type !== null) {
-                noteNames = tools.calculateNotes(state.sharedRoot, state.triad.type, musicTheory.triads.intervals);
-            }
-            // If interval mode is enabled and both key and type are selected, show interval notes
-            else if (state.intervalEnabled && state.sharedRoot !== null && state.interval.type !== null) {
-                noteNames = tools.calculateNotes(state.sharedRoot, state.interval.type, musicTheory.intervals.intervals);
-            }
-            // Default chromatic scale
-            else {
-                noteNames = state.accidentals === 'sharps' ? notesSharp : notesFlat;
-            }
-
+            const noteNames = tools.getCurrentNoteNames();
             noteNames.forEach((noteName) => {
                 let noteNameElement = tools.createElement('span', noteName);
                 noteNameSection.appendChild(noteNameElement);
@@ -238,18 +163,10 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
         },
 
         highlightNotes() {
-            if (state.scaleEnabled && state.sharedRoot !== null && state.scale.type !== null) {
-                const scaleNotes = tools.calculateNotes(state.sharedRoot, state.scale.type, musicTheory.scales.intervals);
-                const colors = { root: '#FF5722', other: '#2196F3' };
-                tools.highlightNotes(scaleNotes, colors);
-            } else if (state.triadEnabled && state.sharedRoot !== null && state.triad.type !== null) {
-                const triadNotes = tools.calculateNotes(state.sharedRoot, state.triad.type, musicTheory.triads.intervals);
-                const colors = { root: '#9C27B0', other: '#E91E63' };
-                tools.highlightNotes(triadNotes, colors);
-            } else if (state.intervalEnabled && state.sharedRoot !== null && state.interval.type !== null) {
-                const intervalNotes = tools.calculateNotes(state.sharedRoot, state.interval.type, musicTheory.intervals.intervals);
-                const colors = { root: '#4CAF50', other: '#8BC34A' };
-                tools.highlightNotes(intervalNotes, colors);
+            const activeMode = tools.getActiveMode();
+            if (activeMode) {
+                const notes = tools.calculateNotes(state.sharedRoot, activeMode.stateProperty.type, activeMode.intervals);
+                tools.highlightNotes(notes, activeMode.colors);
             } else {
                 tools.clearHighlights();
             }
@@ -319,90 +236,79 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
         setDisplayMode(event) {
             state.displayMode = event.target.value;
             
-            // Show/hide scale controls
-            const showScales = state.displayMode === 'scales';
-            tools.toggleElementVisibility('label[for="scale-key"]', showScales);
-            tools.toggleElementVisibility('label[for="scale-mode"]', showScales);
-            tools.toggleElementVisibility('#scale-key', showScales);
-            tools.toggleElementVisibility('#scale-mode', showScales);
+            const modeConfig = {
+                scales: { 
+                    keySelector: scaleKeySelector, 
+                    typeSelector: scaleModeSelector, 
+                    stateProperty: state.scale,
+                    selectors: ['label[for="scale-key"]', 'label[for="scale-mode"]', '#scale-key', '#scale-mode']
+                },
+                triads: { 
+                    keySelector: triadKeySelector, 
+                    typeSelector: triadTypeSelector, 
+                    stateProperty: state.triad,
+                    selectors: ['label[for="triad-key"]', 'label[for="triad-type"]', '#triad-key', '#triad-type']
+                },
+                intervals: { 
+                    keySelector: intervalKeySelector, 
+                    typeSelector: intervalTypeSelector, 
+                    stateProperty: state.interval,
+                    selectors: ['label[for="interval-key"]', 'label[for="interval-type"]', '#interval-key', '#interval-type']
+                }
+            };
             
-            // Show/hide triad controls
-            const showTriads = state.displayMode === 'triads';
-            tools.toggleElementVisibility('label[for="triad-key"]', showTriads);
-            tools.toggleElementVisibility('label[for="triad-type"]', showTriads);
-            tools.toggleElementVisibility('#triad-key', showTriads);
-            tools.toggleElementVisibility('#triad-type', showTriads);
-            
-            // Show/hide interval controls
-            const showIntervals = state.displayMode === 'intervals';
-            tools.toggleElementVisibility('label[for="interval-key"]', showIntervals);
-            tools.toggleElementVisibility('label[for="interval-type"]', showIntervals);
-            tools.toggleElementVisibility('#interval-key', showIntervals);
-            tools.toggleElementVisibility('#interval-type', showIntervals);
-            
-            // Sync shared root to current selector when switching modes
-            if (showScales) {
-                scaleKeySelector.value = state.sharedRoot || '';
-            } else if (showTriads) {
-                triadKeySelector.value = state.sharedRoot || '';
-            } else if (showIntervals) {
-                intervalKeySelector.value = state.sharedRoot || '';
-            }
-            
-            // Clear type selections when switching modes
-            if (!showScales) {
-                state.scale.type = null;
-                scaleModeSelector.value = '';
-            }
-            if (!showTriads) {
-                state.triad.type = null;
-                triadTypeSelector.value = '';
-            }
-            if (!showIntervals) {
-                state.interval.type = null;
-                intervalTypeSelector.value = '';
-            }
+            // Show/hide controls for each mode
+            Object.keys(modeConfig).forEach(mode => {
+                const config = modeConfig[mode];
+                const isActiveMode = state.displayMode === mode;
+                
+                // Toggle visibility
+                config.selectors.forEach(selector => {
+                    tools.toggleElementVisibility(selector, isActiveMode);
+                });
+                
+                // Sync shared root or clear state
+                if (isActiveMode) {
+                    config.keySelector.value = state.sharedRoot || '';
+                } else {
+                    config.stateProperty.type = null;
+                    config.typeSelector.value = '';
+                }
+            });
             
             tools.updateHoverDisabled();
             app.highlightNotes();
             app.setupNoteNameSection();
         },
 
-        setScaleKey(event) {
+        setRootKey(event) {
             state.sharedRoot = event.target.value === '' ? null : event.target.value;
+            
+            // Sync the shared root to all selectors
+            const rootValue = state.sharedRoot || '';
+            [scaleKeySelector, triadKeySelector, intervalKeySelector].forEach(selector => {
+                if (selector.value !== rootValue) {
+                    selector.value = rootValue;
+                }
+            });
+            
             app.highlightNotes();
             app.setupNoteNameSection();
         },
 
-        setScaleMode(event) {
-            state.scale.type = event.target.value === '' ? null : event.target.value;
+        setScaleKey(event) { handlers.setRootKey(event); },
+        setTriadKey(event) { handlers.setRootKey(event); },
+        setIntervalKey(event) { handlers.setRootKey(event); },
+
+        setModeType(event, modeProperty) {
+            modeProperty.type = event.target.value === '' ? null : event.target.value;
             app.highlightNotes();
             app.setupNoteNameSection();
         },
 
-        setTriadKey(event) {
-            state.sharedRoot = event.target.value === '' ? null : event.target.value;
-            app.highlightNotes();
-            app.setupNoteNameSection();
-        },
-
-        setTriadType(event) {
-            state.triad.type = event.target.value === '' ? null : event.target.value;
-            app.highlightNotes();
-            app.setupNoteNameSection();
-        },
-
-        setIntervalKey(event) {
-            state.sharedRoot = event.target.value === '' ? null : event.target.value;
-            app.highlightNotes();
-            app.setupNoteNameSection();
-        },
-
-        setIntervalType(event) {
-            state.interval.type = event.target.value === '' ? null : event.target.value;
-            app.highlightNotes();
-            app.setupNoteNameSection();
-        },
+        setScaleMode(event) { handlers.setModeType(event, state.scale); },
+        setTriadType(event) { handlers.setModeType(event, state.triad); },
+        setIntervalType(event) { handlers.setModeType(event, state.interval); },
 
         setupEventListeners() {
             fretboard.addEventListener('mouseover', this.showNoteDot);
@@ -412,7 +318,9 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
             accidentalSelector.addEventListener('click', this.setAccidentals);
             numberOfFretsSelector.addEventListener('change', this.setNumberOfFrets);
             noteDisplayModeSelector.addEventListener('change', this.setNoteDisplayMode);
-            displayModeSelector.addEventListener('change', this.setDisplayMode);
+            displayModeRadios.forEach(radio => {
+                radio.addEventListener('change', this.setDisplayMode);
+            });
             scaleKeySelector.addEventListener('change', this.setScaleKey);
             scaleModeSelector.addEventListener('change', this.setScaleMode);
             triadKeySelector.addEventListener('change', this.setTriadKey);
@@ -456,7 +364,7 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
 
         toggleElementVisibility(selector, visible) {
             const element = document.querySelector(selector);
-            if (element) element.style.display = visible ? 'inline-block' : 'none';
+            if (element) element.style.display = visible ? '' : 'none';
         },
 
         clearHighlights() {
@@ -481,6 +389,45 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
 
         updateHoverDisabled() {
             state.hoverDisabled = state.showAllNotes || state.scaleEnabled || state.triadEnabled || state.intervalEnabled;
+        },
+
+        getModeConfig() {
+            return {
+                scales: { 
+                    stateProperty: state.scale, 
+                    intervals: musicTheory.scales.intervals,
+                    colors: { root: '#ff0404', other: '#2196F3' },
+                    enabled: state.scaleEnabled
+                },
+                triads: { 
+                    stateProperty: state.triad, 
+                    intervals: musicTheory.triads.intervals,
+                    colors: { root: '#ff0404', other: '#2196F3' },
+                    enabled: state.triadEnabled
+                },
+                intervals: { 
+                    stateProperty: state.interval, 
+                    intervals: musicTheory.intervals.intervals,
+                    colors: { root: '#ff0404', other: '#2196F3' },
+                    enabled: state.intervalEnabled
+                }
+            };
+        },
+
+        getActiveMode() {
+            const config = this.getModeConfig();
+            const activeMode = Object.values(config).find(mode => 
+                mode.enabled && state.sharedRoot !== null && mode.stateProperty.type !== null
+            );
+            return activeMode || null;
+        },
+
+        getCurrentNoteNames() {
+            const activeMode = this.getActiveMode();
+            if (activeMode) {
+                return this.calculateNotes(state.sharedRoot, activeMode.stateProperty.type, activeMode.intervals);
+            }
+            return state.accidentals === 'sharps' ? notesSharp : notesFlat;
         }
     };
 

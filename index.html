@@ -3,68 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/fretboard.css">
+    <link rel="icon" href="./images/favicon.ico" type="image/x-icon">
 
     <title>Guitar Trainer</title>
 </head>
 <body>
     <div class="settings">
         <!-- Settings contains all the selectors -->
-        <label for="instrument-selector">Selected instrument:</label>
-        <select name="instrument-selector" id="instrument-selector"></select>
-
-        <div class="accidental-selector">
-            <input type="radio" class="acc-select" id="sharps" name="accidentals" value="sharps" checked>
-            <label for="sharps">♯</label>
-            <input type="radio" class="acc-select" id="flats" name="accidentals" value="flats">
-            <label for="flats">♭</label>
+        <div class="selector-block">
+            <label for="instrument-selector">Instrument</label>
+            <select name="instrument-selector" id="instrument-selector"></select>
         </div>
 
-        <label for="number-of-frets">Number of frets:</label>
-        <input type="number" id="number-of-frets" value="21" min="5" max="30">
+        <div class="selector-block">
+            <label for="number-of-frets">Frets</label>
+            <input type="number" id="number-of-frets" value="21" min="5" max="30">
+        </div>
 
-        <label for="note-display-mode">Note display:</label>
-        <select id="note-display-mode">
-            <option value="single">Single</option>
-            <option value="multiple">Multiple</option>
-            <option value="all">All</option>
-        </select>
+        <div class="accidental-selector selector-block">
+            <label>Accidental</label>
+            <div>
+                <input type="radio" class="acc-select" id="sharps" name="accidentals" value="sharps" checked>
+                <label for="sharps">♯</label>
+                <input type="radio" class="acc-select" id="flats" name="accidentals" value="flats">
+                <label for="flats">♭</label>
+            </div>
+        </div>
 
-        <div class="display-mode-selector">
+        <div class="selector-block">
+            <label for="note-display-mode">Note Display Mode</label>
+            <select id="note-display-mode">
+                <option value="single">Single</option>
+                <option value="multiple">Multiple</option>
+                <option value="all">All</option>
+            </select>
+        </div>
+
+        <div class="display-mode-selector selector-block">
             <label>Display mode:</label>
-            <input type="radio" id="mode-free" name="display-mode" value="free" checked>
-            <label for="mode-free">Free</label>
-            <input type="radio" id="mode-scales" name="display-mode" value="scales">
-            <label for="mode-scales">Scales</label>
-            <input type="radio" id="mode-triads" name="display-mode" value="triads">
-            <label for="mode-triads">Triads</label>
-            <input type="radio" id="mode-intervals" name="display-mode" value="intervals">
-            <label for="mode-intervals">Intervals</label>
+            <div>
+                <input type="radio" id="mode-free" name="display-mode" value="free" checked>
+                <label for="mode-free">Free</label>
+                <input type="radio" id="mode-scales" name="display-mode" value="scales">
+                <label for="mode-scales">Scales</label>
+                <input type="radio" id="mode-triads" name="display-mode" value="triads">
+                <label for="mode-triads">Triads</label>
+                <input type="radio" id="mode-intervals" name="display-mode" value="intervals">
+                <label for="mode-intervals">Intervals</label>
+            </div>
+            <div>
+                <label for="scale-key">Root: </label>
+                <select name="scale-key" id="scale-key"></select>
+
+                <label for="scale-mode">Mode: </label>
+                <select name="scale-mode" id="scale-mode"></select>
+
+                <label for="triad-key">Root: </label>
+                <select name="triad-key" id="triad-key"></select>
+
+                <label for="triad-type">Type: </label>
+                <select name="triad-type" id="triad-type"></select>
+
+                <label for="interval-key">Root: </label>
+                <select name="interval-key" id="interval-key"></select>
+
+                <label for="interval-type">Interval: </label>
+                <select name="interval-type" id="interval-type"></select>
+            </div>
         </div>
-
-        <label for="scale-key">Root: </label>
-        <select name="scale-key" id="scale-key"></select>
-
-        <label for="scale-mode"> Mode: </label>
-        <select name="scale-mode" id="scale-mode"></select>
-
-        <label for="triad-key">Root: </label>
-        <select name="triad-key" id="triad-key"></select>
-
-        <label for="triad-type"> Type: </label>
-        <select name="triad-type" id="triad-type"></select>
-
-        <label for="interval-key">Root: </label>
-        <select name="interval-key" id="interval-key"></select>
-
-        <label for="interval-type"> Interval: </label>
-        <select name="interval-type" id="interval-type"></select>
     </div>
-    <div class="fretboard">
-    </div>
-    <div class="note-name-section">
-
-    </div>
+    <div class="fretboard"></div>
+    <div class="note-name-section"></div>
 
     <script type="module" src="js/app.js"></script>
 </body>
