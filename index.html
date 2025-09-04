@@ -12,38 +12,29 @@
 <body>
     <div class="settings">
         <!-- Settings contains all the selectors -->
-        <div class="selector-block">
-            <label for="instrument-selector">Instrument</label>
-            <select name="instrument-selector" id="instrument-selector"></select>
-        </div>
-
-        <div class="selector-block">
-            <label for="number-of-frets">Frets</label>
-            <input type="number" id="number-of-frets" value="21" min="5" max="30">
-        </div>
-
-        <div class="accidental-selector selector-block">
-            <label>Accidental</label>
-            <div>
-                <input type="radio" class="acc-select" id="sharps" name="accidentals" value="sharps" checked>
-                <label for="sharps">♯</label>
-                <input type="radio" class="acc-select" id="flats" name="accidentals" value="flats">
-                <label for="flats">♭</label>
+        <div class="settings-group settings-row">
+            <div class="form-controls">
+                <label for="instrument-selector">Instrument</label>
+                <select name="instrument-selector" id="instrument-selector"></select>
+            </div>
+            <div class="form-controls">
+                <label for="number-of-frets">Frets</label>
+                <input type="number" id="number-of-frets" value="21" min="5" max="30">
+            </div>
+            <div class="settings-group">
+                <label>Accidental</label>
+                <div class="radio-group">
+                    <input type="radio" class="acc-select" id="sharps" name="accidentals" value="sharps" checked>
+                    <label for="sharps">♯</label>
+                    <input type="radio" class="acc-select" id="flats" name="accidentals" value="flats">
+                    <label for="flats">♭</label>
+                </div>
             </div>
         </div>
 
-        <div class="selector-block">
-            <label for="note-display-mode">Note Display Mode</label>
-            <select id="note-display-mode">
-                <option value="single">Single</option>
-                <option value="multiple">Multiple</option>
-                <option value="all">All</option>
-            </select>
-        </div>
-
-        <div class="display-mode-selector selector-block">
+        <div class="settings-group">
             <label>Display mode:</label>
-            <div>
+            <div class="radio-group">
                 <input type="radio" id="mode-free" name="display-mode" value="free" checked>
                 <label for="mode-free">Free</label>
                 <input type="radio" id="mode-scales" name="display-mode" value="scales">
@@ -53,7 +44,14 @@
                 <input type="radio" id="mode-intervals" name="display-mode" value="intervals">
                 <label for="mode-intervals">Intervals</label>
             </div>
-            <div>
+            <div class="form-controls">
+                <label for="note-display-mode">Note Display Mode: </label>
+                <select id="note-display-mode">
+                    <option value="single">Single</option>
+                    <option value="multiple">Multiple</option>
+                    <option value="all">All</option>
+                </select>
+
                 <label for="scale-key">Root: </label>
                 <select name="scale-key" id="scale-key"></select>
 

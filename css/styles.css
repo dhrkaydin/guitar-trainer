@@ -16,39 +16,47 @@ body {
     padding: 5px;
     border-bottom: 1px solid #444;
     background: #282828;
-    justify-content: space-between;
+    justify-content: space-evenly;
     min-height: 80px;
 }
 
-.selector-block {
+.settings-group {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
 }
 
-.selector-block select, input {
+.settings-row {
+    flex-direction: row;
+}
+
+.form-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     margin: 6px;
 }
-.selector-block div {
+
+.radio-group {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
 }
 
-.accidental-selector {
-    margin-left: 20px;
+.form-controls select, 
+.form-controls input {
+    margin: 3px;
 }
 
-.accidental-selector div {
-    flex-direction: row;
-}
-
-input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {
     opacity: 1;
 }
+
 label {
-    margin: 0 10px;
+    margin: 0 5px;
 }
 

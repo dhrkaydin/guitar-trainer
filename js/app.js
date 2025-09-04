@@ -47,6 +47,8 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
             this.setupIntervalSelectors();
             this.setupNoteNameSection();
             handlers.setupEventListeners();
+            // Initialize visibility based on default display mode
+            handlers.setDisplayMode({ target: { value: state.displayMode } });
         },
 
         setupSelectedInstrumentSelector(instrument) {
@@ -256,6 +258,11 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
                     selectors: ['label[for="interval-key"]', 'label[for="interval-type"]', '#interval-key', '#interval-type']
                 }
             };
+            
+            // Show/hide Note Display Mode controls (only for Free mode)
+            const showNoteDisplayMode = state.displayMode === 'free';
+            tools.toggleElementVisibility('label[for="note-display-mode"]', showNoteDisplayMode);
+            tools.toggleElementVisibility('#note-display-mode', showNoteDisplayMode);
             
             // Show/hide controls for each mode
             Object.keys(modeConfig).forEach(mode => {
