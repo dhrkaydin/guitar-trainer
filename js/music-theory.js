@@ -33,7 +33,17 @@ export const musicTheory = {
             { value: 'pentatonic-major', name: 'Pentatonic Major' },
             { value: 'pentatonic-minor', name: 'Pentatonic Minor' },
             { value: 'blues', name: 'Blues' }
-        ]
+        ],
+        specialIntervals: {
+            'ionian': [4, 11],      // major 3rd and major 7th
+            'dorian': [3, 9],       // minor 3rd and major 6th  
+            'phrygian': [1],        // flat 2nd
+            'lydian': [6],          // sharp 4th
+            'mixolydian': [10],     // flat 7th
+            'aeolian': [3, 8],      // minor 3rd and minor 6th
+            'locrian': [6],         // diminished 5th
+            'blues': [6]            // flatted 5th is the blue note
+        }
     },
     intervals: {
         intervals: {

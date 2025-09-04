@@ -9,7 +9,7 @@
     --double-fretmark-position-2: calc(var(--fretboard-height) * 0.75);
 
     --note-dot-opacity: 0;
-    --note-dot-color: teal;
+    --note-dot-color: #661ecb;
 }
 
 .fretboard {

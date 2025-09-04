@@ -4,7 +4,7 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
     const root = document.documentElement;
 
     const selectedInstrumentSelector = document.querySelector('#instrument-selector');
-    const accidentalSelector = document.querySelector('.accidental-selector');
+    const accidentalSelector = document;
     const numberOfFretsSelector = document.querySelector('#number-of-frets');
     const noteDisplayModeSelector = document.querySelector('#note-display-mode');
     const scaleKeySelector = document.querySelector('#scale-key');
@@ -168,7 +168,8 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
             const activeMode = tools.getActiveMode();
             if (activeMode) {
                 const notes = tools.calculateNotes(state.sharedRoot, activeMode.stateProperty.type, activeMode.intervals);
-                tools.highlightNotes(notes, activeMode.colors);
+                const specialNotes = tools.calculateSpecialNotes(state.sharedRoot, activeMode.stateProperty.type, activeMode.specialIntervals);
+                tools.highlightNotes(notes, specialNotes, activeMode.colors);
             } else {
                 tools.clearHighlights();
             }
@@ -276,7 +277,29 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
                 
                 // Sync shared root or clear state
                 if (isActiveMode) {
-                    config.keySelector.value = state.sharedRoot || '';
+                    // Set defaults for each mode
+                    if (state.sharedRoot === null || config.stateProperty.type === null) {
+                        if (mode === 'scales') {
+                            state.sharedRoot = '0'; // C note
+                            config.stateProperty.type = 'ionian'; // Major scale
+                            config.keySelector.value = '0';
+                            config.typeSelector.value = 'ionian';
+                        } else if (mode === 'triads') {
+                            state.sharedRoot = '0'; // C note
+                            config.stateProperty.type = 'major'; // Major triad
+                            config.keySelector.value = '0';
+                            config.typeSelector.value = 'major';
+                        } else if (mode === 'intervals') {
+                            state.sharedRoot = '0'; // C note
+                            config.stateProperty.type = 'perfect-5th'; // Perfect 5th interval
+                            config.keySelector.value = '0';
+                            config.typeSelector.value = 'perfect-5th';
+                        } else {
+                            config.keySelector.value = state.sharedRoot || '';
+                        }
+                    } else {
+                        config.keySelector.value = state.sharedRoot || '';
+                    }
                 } else {
                     config.stateProperty.type = null;
                     config.typeSelector.value = '';
@@ -369,6 +392,18 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
             });
         },
 
+        calculateSpecialNotes(key, type, specialIntervalsSource) {
+            if (key === null || type === null || !specialIntervalsSource || !specialIntervalsSource[type]) return [];
+
+            const specialIntervals = specialIntervalsSource[type];
+            const noteNames = state.accidentals === 'sharps' ? notesSharp : notesFlat;
+
+            return specialIntervals.map(interval => {
+                const noteIndex = (parseInt(key) + interval) % 12;
+                return noteNames[noteIndex];
+            });
+        },
+
         toggleElementVisibility(selector, visible) {
             const element = document.querySelector(selector);
             if (element) element.style.display = visible ? '' : 'none';
@@ -381,11 +416,20 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
             });
         },
 
-        highlightNotes(notes, colors) {
+        highlightNotes(notes, specialNotes, colors) {
             this.forEachNote(note => {
                 if (notes.includes(note.dataset.note)) {
                     note.style.setProperty('--note-dot-opacity', 1);
-                    const colorKey = note.dataset.note === notes[0] ? 'root' : 'other';
+                    
+                    let colorKey;
+                    if (note.dataset.note === notes[0]) {
+                        colorKey = 'root';
+                    } else if (specialNotes.includes(note.dataset.note)) {
+                        colorKey = 'special';
+                    } else {
+                        colorKey = 'other';
+                    }
+                    
                     note.style.setProperty('--note-dot-color', colors[colorKey]);
                 } else {
                     note.style.removeProperty('--note-dot-opacity');
@@ -399,23 +443,26 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
         },
 
         getModeConfig() {
+            const colors = { root: '#661ecb', other: '#a582e3', special: '#4a90e2' };
+            
             return {
                 scales: { 
                     stateProperty: state.scale, 
                     intervals: musicTheory.scales.intervals,
-                    colors: { root: '#ff0404', other: '#2196F3' },
+                    specialIntervals: musicTheory.scales.specialIntervals,
+                    colors: colors,
                     enabled: state.scaleEnabled
                 },
                 triads: { 
                     stateProperty: state.triad, 
                     intervals: musicTheory.triads.intervals,
-                    colors: { root: '#ff0404', other: '#2196F3' },
+                    colors: colors,
                     enabled: state.triadEnabled
                 },
                 intervals: { 
                     stateProperty: state.interval, 
                     intervals: musicTheory.intervals.intervals,
-                    colors: { root: '#ff0404', other: '#2196F3' },
+                    colors: colors,
                     enabled: state.intervalEnabled
                 }
             };
