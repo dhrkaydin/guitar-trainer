@@ -19,7 +19,7 @@
     width: 100%;
     min-width:1200px;
     height: calc(var(--fretboard-height) * 1px);
-    margin-top: 50px;
+    margin-top: 0;
 }
 
 .string {
@@ -66,9 +66,12 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    line-height: 44px;
-    text-align: center;
-    background: var(--note-dot-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, rgba(255,255,255,0.18) 0%, rgba(0,0,0,0.15) 100%), var(--note-dot-color);
+    border: 1.5px solid rgba(0,0,0,0.4);
+    box-sizing: border-box;
     z-index: 2;
     color: #eee;
     opacity: var(--note-dot-opacity);
@@ -98,7 +101,8 @@
 }
 
 .note-fret.triad-active:before {
-    background: #e8921a;
+    background: linear-gradient(145deg, rgba(255,255,255,0.18) 0%, rgba(0,0,0,0.15) 100%), #e8921a;
+    border: 1.5px solid rgba(0,0,0,0.4);
     opacity: 1;
 }
 

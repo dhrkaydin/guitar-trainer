@@ -6,57 +6,135 @@
 }
 
 body {
-background: #353535;
+    background: #353535;
     font-family: Lato, sans-serif;
 }
 
-.settings {
-    display: flex;
-    color: #fff;
-    padding: 5px;
-    border-bottom: 1px solid #444;
-    background: #282828;
-    justify-content: space-evenly;
-    min-height: 80px;
+.app-header {
+    background: #1a1a1a;
+    padding: 14px 20px;
+    border-bottom: 1px solid #333;
+    align-items: center;
+    text-align: center;
 }
 
-.settings-group {
+
+.app-header h1 {
+    font-size: 1.1em;
+    font-weight: 300;
+    color: #bbb;
+    letter-spacing: 0.05em;
+}
+
+.controls-panel {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 12px;
+    padding: 16px;
+    background: #1e1e1e;
+    border-top: 1px solid #333;
+}
+
+.control-card {
+    display: flex;
     flex-direction: column;
+    gap: 14px;
+    padding: 18px 20px;
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 12px;
+    color: #fff;
+    flex: 1 1 220px;
 }
 
-.settings-row {
+.card-title {
+    font-size: 0.72em;
+    font-weight: 400;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-body.row {
     flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
-.form-controls {
+.control-group {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin: 6px;
-}
-
-.radio-group {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     gap: 10px;
 }
 
-.form-controls select, 
-.form-controls input {
-    margin: 3px;
+.control-group label {
+    font-size: 0.9em;
+    font-weight: 300;
+    color: #999;
+    white-space: nowrap;
 }
 
-input[type=number]::-webkit-inner-spin-button, 
+.control-group select,
+.control-group input[type="number"] {
+    background: #333;
+    color: #eee;
+    border: 1px solid #484848;
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-family: Lato, sans-serif;
+    font-size: 0.9em;
+    font-weight: 300;
+    outline: none;
+    cursor: pointer;
+}
+
+.control-group select:focus,
+.control-group input[type="number"]:focus {
+    border-color: #661ecb;
+}
+
+input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     opacity: 1;
 }
 
-label {
-    margin: 0 5px;
+.btn-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
+.mode-btn {
+    padding: 10px 18px;
+    background: #333;
+    color: #aaa;
+    border: 1px solid #484848;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: Lato, sans-serif;
+    font-size: 0.95em;
+    font-weight: 300;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.mode-btn:hover {
+    background: #3d3d3d;
+    color: #eee;
+    border-color: #666;
+}
+
+.mode-btn.active {
+    background: #661ecb;
+    color: #fff;
+    border-color: #661ecb;
+}
