@@ -165,6 +165,7 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
         },
 
         highlightNotes() {
+            tools.clearScaleTriadHighlight();
             const activeMode = tools.getActiveMode();
             if (activeMode) {
                 const notes = tools.calculateNotes(state.sharedRoot, activeMode.stateProperty.type, activeMode.intervals);
@@ -178,26 +179,34 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
 
     const handlers = {
         showNoteDot(event) {
+            if (!event.target.classList.contains('note-fret')) return;
+
+            if (state.scaleEnabled) {
+                tools.highlightScaleTriad(event.target);
+                return;
+            }
             if (state.hoverDisabled) return;
 
-            if (event.target.classList.contains('note-fret')) {
-                if (state.showMultipleNotes) {
-                    app.toggleMultipleNotes(event.target.dataset.note, 1);
-                } else {
-                    event.target.style.setProperty('--note-dot-opacity', 1);
-                }
+            if (state.showMultipleNotes) {
+                app.toggleMultipleNotes(event.target.dataset.note, 1);
+            } else {
+                event.target.style.setProperty('--note-dot-opacity', 1);
             }
         },
 
         hideNoteDot(event) {
+            if (!event.target.classList.contains('note-fret')) return;
+
+            if (state.scaleEnabled) {
+                tools.clearScaleTriadHighlight();
+                return;
+            }
             if (state.hoverDisabled) return;
 
-            if (event.target.classList.contains('note-fret')) {
-                if (state.showMultipleNotes) {
-                    app.toggleMultipleNotes(event.target.dataset.note, 0);
-                } else {
-                    event.target.style.setProperty('--note-dot-opacity', 0);
-                }
+            if (state.showMultipleNotes) {
+                app.toggleMultipleNotes(event.target.dataset.note, 0);
+            } else {
+                event.target.style.setProperty('--note-dot-opacity', 0);
             }
         },
 
@@ -442,8 +451,132 @@ import { notesSharp, notesFlat, instrumentTuningPresets, musicTheory, fretmarkPo
             state.hoverDisabled = state.showAllNotes || state.scaleEnabled || state.triadEnabled || state.intervalEnabled;
         },
 
+        getScaleTriad(rootNote, scaleType) {
+            const noteNames = state.accidentals === 'sharps' ? notesSharp : notesFlat;
+            const rootIndex = noteNames.indexOf(rootNote);
+
+            // Pentatonic scales derive triad quality from their parent diatonic scale
+            const searchType = musicTheory.scales.parentScales[scaleType] || scaleType;
+            const searchNotes = this.calculateNotes(state.sharedRoot, searchType, musicTheory.scales.intervals);
+            const searchIndices = searchNotes.map(n => noteNames.indexOf(n));
+
+            let thirdNote = null;
+            for (const semi of [3, 4]) {
+                const target = (rootIndex + semi) % 12;
+                if (searchIndices.includes(target)) { thirdNote = noteNames[target]; break; }
+            }
+
+            let fifthNote = null;
+            for (const semi of [7, 6]) {
+                const target = (rootIndex + semi) % 12;
+                if (searchIndices.includes(target)) { fifthNote = noteNames[target]; break; }
+            }
+
+            return [rootNote, thirdNote, fifthNote].filter(n => n !== null);
+        },
+
+        highlightScaleTriad(hoveredEl) {
+            const activeMode = this.getActiveMode();
+            if (!activeMode) return;
+
+            const scaleType = activeMode.stateProperty.type;
+            const scaleNotes = this.calculateNotes(state.sharedRoot, scaleType, activeMode.intervals);
+            if (!scaleNotes.includes(hoveredEl.dataset.note)) return;
+
+            const specialNotes = this.calculateSpecialNotes(state.sharedRoot, scaleType, musicTheory.scales.specialIntervals);
+            if (specialNotes.includes(hoveredEl.dataset.note)) {
+                hoveredEl.classList.add('triad-active');
+                return;
+            }
+
+            const triadNotes = this.getScaleTriad(hoveredEl.dataset.note, scaleType);
+
+            const strings = Array.from(fretboard.querySelectorAll('.string'));
+            const numStrings = strings.length;
+            if (numStrings < 3) {
+                hoveredEl.classList.add('triad-active');
+                return;
+            }
+
+            const hoveredStringIdx = strings.indexOf(hoveredEl.parentElement);
+            const hoveredFretIdx = Array.from(hoveredEl.parentElement.querySelectorAll('.note-fret')).indexOf(hoveredEl);
+
+            // Pick 3 consecutive strings that include the hovered string
+            let s0, s1, s2;
+            if (hoveredStringIdx === 0) {
+                [s0, s1, s2] = [strings[0], strings[1], strings[2]];
+            } else if (hoveredStringIdx >= numStrings - 1) {
+                [s0, s1, s2] = [strings[numStrings - 3], strings[numStrings - 2], strings[numStrings - 1]];
+            } else {
+                [s0, s1, s2] = [strings[hoveredStringIdx - 1], strings[hoveredStringIdx], strings[hoveredStringIdx + 1]];
+            }
+
+            const hoveredString = hoveredEl.parentElement;
+            const otherStrings = [s0, s1, s2].filter(s => s !== hoveredString);
+            const remaining = triadNotes.filter(n => n !== hoveredEl.dataset.note);
+
+            const toHighlight = [hoveredEl];
+
+            if (remaining.length >= 2 && otherStrings.length >= 2) {
+                const [sA, sB] = otherStrings;
+                const [n0, n1] = remaining;
+
+                // Try both assignments of the two remaining notes to the two adjacent strings
+                const elA0 = this.findClosestFretEl(sA, n0, hoveredFretIdx);
+                const elB1 = this.findClosestFretEl(sB, n1, hoveredFretIdx);
+                const elA1 = this.findClosestFretEl(sA, n1, hoveredFretIdx);
+                const elB0 = this.findClosestFretEl(sB, n0, hoveredFretIdx);
+
+                if (this.calcFretSpan(hoveredFretIdx, elA0, elB1) <= this.calcFretSpan(hoveredFretIdx, elA1, elB0)) {
+                    if (elA0) toHighlight.push(elA0);
+                    if (elB1) toHighlight.push(elB1);
+                } else {
+                    if (elA1) toHighlight.push(elA1);
+                    if (elB0) toHighlight.push(elB0);
+                }
+            } else if (remaining.length === 1 && otherStrings.length >= 1) {
+                const elA = this.findClosestFretEl(otherStrings[0], remaining[0], hoveredFretIdx);
+                const elB = otherStrings[1] ? this.findClosestFretEl(otherStrings[1], remaining[0], hoveredFretIdx) : null;
+                const best = (elA && elB)
+                    ? (this.calcFretSpan(hoveredFretIdx, elA, null) <= this.calcFretSpan(hoveredFretIdx, elB, null) ? elA : elB)
+                    : (elA || elB);
+                if (best) toHighlight.push(best);
+            }
+
+            toHighlight.forEach(el => el.classList.add('triad-active'));
+        },
+
+        findClosestFretEl(stringEl, noteName, refFretIdx) {
+            const frets = Array.from(stringEl.querySelectorAll('.note-fret'));
+            let best = null;
+            let bestDist = Infinity;
+            frets.forEach((fret, idx) => {
+                if (fret.dataset.note === noteName) {
+                    const dist = Math.abs(idx - refFretIdx);
+                    if (dist < bestDist) {
+                        bestDist = dist;
+                        best = fret;
+                    }
+                }
+            });
+            return best;
+        },
+
+        calcFretSpan(refFretIdx, elA, elB) {
+            const indices = [refFretIdx];
+            if (elA) indices.push(Array.from(elA.parentElement.querySelectorAll('.note-fret')).indexOf(elA));
+            if (elB) indices.push(Array.from(elB.parentElement.querySelectorAll('.note-fret')).indexOf(elB));
+            return Math.max(...indices) - Math.min(...indices);
+        },
+
+        clearScaleTriadHighlight() {
+            this.forEachNote(note => {
+                note.classList.remove('triad-active');
+            });
+        },
+
         getModeConfig() {
-            const colors = { root: '#661ecb', other: '#a582e3', special: '#4a90e2' };
+            const colors = { root: '#661ecb', other: '#a582e3', special: '#c14ae2' };
             
             return {
                 scales: { 

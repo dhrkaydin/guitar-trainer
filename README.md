@@ -21,11 +21,16 @@ So here it is. It's free baby.
 ### How to use it
 
 Simply download this repository, and open the "index.html" file using any browser. I might add some kind of bundler in the future but not sure.
+^- this doesn't seem to work lately so i do ```python3 -m http.server 8080```
 
 ### Tech stack
 
 Literally as bare-bones as it gets. The fretboard is made using CSS, with a texture image over it to give it that woody look.
 Almost everything is done in plain Javascript, and it uses no back-end or anything like that.
+
+### TODO
+
+- Look into the triads in the blues scale to make sure they are correct
 
 ### Future ideas ???
 

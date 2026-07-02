@@ -34,6 +34,11 @@ export const musicTheory = {
             { value: 'pentatonic-minor', name: 'Pentatonic Minor' },
             { value: 'blues', name: 'Blues' }
         ],
+        parentScales: {
+            'pentatonic-major': 'ionian',
+            'pentatonic-minor': 'aeolian',
+            'blues': 'aeolian'
+        },
         specialIntervals: {
             'ionian': [4, 11],      // major 3rd and major 7th
             'dorian': [3, 9],       // minor 3rd and major 6th  

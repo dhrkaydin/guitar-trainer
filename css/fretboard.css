@@ -97,6 +97,11 @@
     transform: translate(-140%, -50%);
 }
 
+.note-fret.triad-active:before {
+    background: #e8921a;
+    opacity: 1;
+}
+
 .note-name-section {
     width: 100%;
     color: #fff;
